@@ -2,6 +2,7 @@ class CreateAccounts < ActiveRecord::Migration
   def self.up
     create_table :accounts do |t|
       t.string :name, :limit => 64, :null => false
+      t.string :designation, :limit => 10, :null => false
     end
 
     add_index :accounts, %w(name), :unique => true, :name => :by_name
