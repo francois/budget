@@ -29,3 +29,10 @@ post "/accounts" do
   account = Account.create!(params)
   account.to_json
 end
+
+put "/account/:id" do
+  header "Content-Type" => "application/javascript; charset=UTF-8"
+  account = Account.find(params.delete("id"))
+  account.update_attributes!(params)
+  account.to_json
+end
