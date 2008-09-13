@@ -18,3 +18,14 @@ end
 configure :test do
   ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory")
 end
+
+get "/accounts" do
+  header "Content-Type" => "application/javascript; charset=UTF-8"
+  Account.all.to_json
+end
+
+post "/accounts" do
+  header "Content-Type" => "application/javascript; charset=UTF-8"
+  account = Account.create!(params)
+  account.to_json
+end
