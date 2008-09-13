@@ -16,7 +16,7 @@ configure :development do
 end
 
 configure :test do
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory")
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => "db/test.db")
 end
 
 error ActiveRecord::RecordNotFound do
