@@ -19,6 +19,12 @@ configure :test do
   ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory")
 end
 
+error ActiveRecord::RecordNotFound do
+  status 404
+  header "Content-Type" => "text/plain; charset=UTF-8"
+  "Unknown object, or object not found"
+end
+
 get "/accounts" do
   header "Content-Type" => "application/javascript; charset=UTF-8"
   Account.all.to_json
