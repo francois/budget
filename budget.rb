@@ -36,3 +36,10 @@ put "/account/:id" do
   account.update_attributes!(params)
   account.to_json
 end
+
+delete "/account/:id" do
+  header "Content-Type" => "application/javascript; charset=UTF-8"
+  account = Account.find(params.delete("id"))
+  account.destroy
+  account.to_json
+end
