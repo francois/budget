@@ -19,10 +19,10 @@ ActiveRecord::Schema.define(:version => 20080913140658) do
   add_index "accounts", ["name"], :name => "by_name", :unique => true
 
   create_table "transfers", :force => true do |t|
-    t.date    "posted_on"
-    t.integer "debit_account_id"
-    t.integer "credit_account_id"
-    t.integer "amount_cents"
+    t.date    "posted_on",         :null => false
+    t.integer "debit_account_id",  :null => false
+    t.integer "credit_account_id", :null => false
+    t.integer "amount_cents",      :null => false
     t.string  "comment"
   end
 

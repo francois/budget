@@ -1,9 +1,9 @@
 class CreateTransfers < ActiveRecord::Migration
   def self.up
     create_table :transfers do |t|
-      t.date :posted_on
-      t.integer :debit_account_id, :credit_account_id
-      t.integer :amount_cents
+      t.date :posted_on, :null => false
+      t.integer :debit_account_id, :credit_account_id, :null => false
+      t.integer :amount_cents, :null => false
       t.string :comment
     end
 
