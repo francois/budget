@@ -20,13 +20,14 @@ ActiveRecord::Schema.define(:version => 20080913140658) do
 
   create_table "transfers", :force => true do |t|
     t.date    "posted_on"
-    t.integer "origin_account_id"
-    t.integer "destination_account_id"
+    t.integer "debit_account_id"
+    t.integer "credit_account_id"
     t.integer "amount_cents"
+    t.string  "comment"
   end
 
-  add_index "transfers", ["destination_account_id"], :name => "index_transfers_on_destination_account_id"
-  add_index "transfers", ["origin_account_id"], :name => "index_transfers_on_origin_account_id"
+  add_index "transfers", ["credit_account_id", "posted_on"], :name => "by_credit_posted"
+  add_index "transfers", ["debit_account_id", "posted_on"], :name => "by_debit_posted"
   add_index "transfers", ["posted_on"], :name => "by_posted"
 
 end
