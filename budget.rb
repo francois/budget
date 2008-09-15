@@ -1,5 +1,7 @@
 require "rubygems"
+gem "sinatra", "~> 0.3"
 require "sinatra"
+gem "activerecord", "~> 2.1"
 require "activerecord"
 require "pathname"
 require "money"
