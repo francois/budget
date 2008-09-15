@@ -2,9 +2,7 @@ require "test/unit"
 require "budget"
 require "shoulda"
 require "active_record/fixtures"
-
-# Prevent Sinatra from starting after the tests are done
-Sinatra.application.options.run = false
+require "sinatra/test/unit"
 
 module Test::Unit::Assertions
   def deny(boolean, message = nil)
@@ -29,4 +27,27 @@ module Test::Unit::Assertions
       not collection.empty?
     end
   end
+end
+
+class Test::Unit::TestCase
+  def logger
+    ActiveRecord::Base.logger
+  end
+
+  def run_with_transaction(*args, &block)
+    begin
+      logger.debug {"==> Running #{name} <=="}
+      ActiveRecord::Base.transaction do
+        run_without_transaction(*args, &block)
+        raise EnsureRollback
+      end
+    rescue EnsureRollback
+      # NOP
+    ensure
+      logger.debug {"==> Done running #{name} <=="}
+    end
+  end
+
+  alias_method_chain :run, :transaction
+  class EnsureRollback < RuntimeError; end
 end
