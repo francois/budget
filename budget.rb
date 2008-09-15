@@ -20,6 +20,12 @@ configure :test do
   ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/test.db")
 end
 
+Dir[APP_ROOT + "vendor/plugins/**/init.rb"].each do |file|
+  puts file
+  $:.unshift << File.dirname(file) + "/lib"
+  require file
+end
+
 error ActiveRecord::RecordNotFound do
   status 404
   header "Content-Type" => "text/plain; charset=UTF-8"
