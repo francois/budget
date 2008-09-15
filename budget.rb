@@ -2,6 +2,7 @@ require "rubygems"
 require "sinatra"
 require "activerecord"
 require "pathname"
+require "money"
 
 configure do
   APP_ROOT = Pathname.new(File.dirname(__FILE__)).realpath
@@ -16,7 +17,7 @@ configure :development do
 end
 
 configure :test do
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => "db/test.db")
+  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/test.db")
 end
 
 error ActiveRecord::RecordNotFound do
