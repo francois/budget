@@ -42,4 +42,40 @@ class AccountTest < Test::Unit::TestCase
       end
     end
   end
+
+  def test_run_in_test_mode
+    assert_equal :test, Sinatra.application.options.env
+  end
+
+  context "Existing accounts" do
+    setup do
+      @asset     = Account.create!(:name => "Bank Account #1", :designation => "asset")
+      @liability = Account.create!(:name => "Credit Card #1", :designation => "liability")
+      @equity    = Account.create!(:name => "Equity", :designation => "equity")
+      @income    = Account.create!(:name => "Income", :designation => "income")
+      @expense   = Account.create!(:name => "Groceries", :designation => "expense")
+    end
+
+    context "being used to reimburse a credit card" do
+      setup do
+        @asset.credit!(:account => @liability, :amount => "450 CAD".to_money, :on => Date.today)
+      end
+
+      should "have a total debit of 0 on the bank account" do
+        assert_equal Money.zero, @asset.sum_of_debits
+      end
+
+      should "have a total credit of 450 on the bank account" do
+        assert_equal "450 CAD".to_money, @asset.sum_of_credits
+      end
+
+      should "have a total debit of 450 on the credit card" do
+        assert_equal "450 CAD".to_money, @liability.sum_of_debits
+      end
+
+      should "have a total credit of 0 on the credit card" do
+        assert_equal Money.zero, @liability.sum_of_credits
+      end
+    end
+  end
 end
