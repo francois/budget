@@ -11,29 +11,32 @@ namespace :db do
   namespace :schema do
     desc "Create a db/schema.rb file that can be portably used against any DB supported by AR"
     task :dump do
-      require 'active_record/schema_dumper'
-      File.open(ENV['SCHEMA'] || "db/schema.rb", "w") do |file|
+      require "active_record/schema_dumper"
+      File.open(APP_ROOT + "db/schema.rb", "w") do |file|
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
       end
     end
 
     desc "Load a schema.rb file into the database"
     task :load do
-      file = ENV['SCHEMA'] || "db/schema.rb"
-      load(file)
+      load(APP_ROOT + "db/schema.rb")
     end
   end
 
   namespace :test do
     desc "Recreate the test database from the current environment's database schema"
     task :clone => %w(db:schema:dump) do
-      ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory")
+      ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/test.db")
       ActiveRecord::Schema.verbose = false
       Rake::Task["db:schema:load"].invoke
     end
 
-    desc 'Prepare the test database and load the schema'
-    task :prepare => "db:test:clone"
+    desc "Empty the test database"
+    task :purge do
+    end
+
+    desc "Prepare the test database and load the schema"
+    task :prepare => %w(db:test:clone db:test:purge)
   end
 end
 
@@ -55,11 +58,10 @@ end
 namespace :test do
   Rake::TestTask.new(:units => "db:test:prepare") do |t|
     t.libs << "test"
-    t.pattern = 'test/unit/**/*_test.rb'
+    t.pattern = "test/unit/**/*_test.rb"
     t.verbose = true
-    Sinatra.application.options.env = "test"
   end
-  Rake::Task['test:units'].comment = "Run the unit tests in test/unit"
+  Rake::Task["test:units"].comment = "Run the unit tests in test/unit"
 end
 
 task :default => "test:units"
