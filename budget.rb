@@ -21,7 +21,6 @@ configure :test do
 end
 
 Dir[APP_ROOT + "vendor/plugins/**/init.rb"].each do |file|
-  puts file
   $:.unshift << File.dirname(file) + "/lib"
   require file
 end
