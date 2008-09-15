@@ -1,0 +1,5 @@
+An online budget manager.  This is a Sinatra application.
+
+For the moment I'm using a SQLite database, but I plan on removing
+this dependency at some point and use local storage through
+either Google Gears or SproutCore's version of it.
