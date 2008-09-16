@@ -30,24 +30,20 @@ module Test::Unit::Assertions
 end
 
 class Test::Unit::TestCase
+  setup :begin_db_transaction
+  teardown :rollback_db_transaction
+
+  def begin_db_transaction
+    ActiveRecord::Base.send :increment_open_transactions
+    ActiveRecord::Base.connection.begin_db_transaction
+  end
+
+  def rollback_db_transaction
+    ActiveRecord::Base.send :decrement_open_transactions
+    ActiveRecord::Base.connection.rollback_db_transaction
+  end
+
   def logger
     ActiveRecord::Base.logger
   end
-
-  def run_with_transaction(*args, &block)
-    begin
-      logger.debug {"==> Running #{name} <=="}
-      ActiveRecord::Base.transaction do
-        run_without_transaction(*args, &block)
-        raise EnsureRollback
-      end
-    rescue EnsureRollback
-      # NOP
-    ensure
-      logger.debug {"==> Done running #{name} <=="}
-    end
-  end
-
-  alias_method_chain :run, :transaction
-  class EnsureRollback < RuntimeError; end
 end
