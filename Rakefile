@@ -26,7 +26,7 @@ namespace :db do
   namespace :test do
     desc "Recreate the test database from the current environment's database schema"
     task :clone => %w(db:schema:dump) do
-      ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/test.db")
+      ActiveRecord::Base.establish_connection(:adapter => "mysql", :database => "budget_development", :username => "root", :encoding => "utf8")
       ActiveRecord::Schema.verbose = false
       Rake::Task["db:schema:load"].invoke
     end

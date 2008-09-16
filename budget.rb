@@ -15,11 +15,11 @@ configure do
 end
 
 configure :development do
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/development.db")
+  ActiveRecord::Base.establish_connection(:adapter => "mysql", :database => "budget_development", :username => "root", :encoding => "utf8")
 end
 
 configure :test do
-  ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => APP_ROOT + "db/test.db")
+  ActiveRecord::Base.establish_connection(:adapter => "mysql", :database => "budget_test", :username => "root", :encoding => "utf8")
 end
 
 Dir[APP_ROOT + "vendor/plugins/**/init.rb"].each do |file|
